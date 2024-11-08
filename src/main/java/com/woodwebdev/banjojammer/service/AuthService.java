@@ -2,7 +2,6 @@ package com.woodwebdev.banjojammer.service;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,14 +30,15 @@ public class AuthService {
   
   public AuthenticationResponse register(RegisterRequest request) {
     var user = User.builder()
-      // .firstName("John")
-      // .lastName("Wood")
+      .firstName(request.getFirstName())
+      .lastName(request.getLastName())
       .email(request.getEmail())
       .password(passwordEncoder.encode(request.getPassword()))
       .role(request.getRole())
       .build();
     repository.save(user);
     var jwtToken = jwtService.generateToken(user);
+    logger.info("User registered: " + user.getEmail());
     return AuthenticationResponse.builder()
       .token(jwtToken)
       .build();
@@ -55,7 +55,7 @@ public class AuthService {
             
             var user = repository.findByEmail(request.getEmail()).orElseThrow();
             String jwt = jwtService.generateToken(user);
-            
+            logger.info("User logged in: " + user.getEmail());
             return AuthenticationResponse.builder()
                 .token(jwt)
                 .build();

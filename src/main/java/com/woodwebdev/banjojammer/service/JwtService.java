@@ -4,14 +4,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
-import javax.crypto.SecretKey;
 import java.security.Key;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -22,7 +18,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
-    private final long jwtExpiration = 1000 * 60 * 60 *24;
+    private final long jwtExpiration = 1000 * 60 * 60 * 24;
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -43,11 +39,6 @@ public class JwtService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse JWT token", e);
         }
-    }
-
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(UserDetails userDetails) {

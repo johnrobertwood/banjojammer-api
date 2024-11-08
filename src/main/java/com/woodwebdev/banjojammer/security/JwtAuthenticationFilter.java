@@ -1,6 +1,5 @@
 package com.woodwebdev.banjojammer.security;
 
-
 import com.woodwebdev.banjojammer.service.AuthService;
 import com.woodwebdev.banjojammer.service.JwtService;
 import org.springframework.lang.NonNull;
@@ -40,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-            logger.warn("JWT token not found in request headers");
             filterChain.doFilter(request, response);
             return;
         }
