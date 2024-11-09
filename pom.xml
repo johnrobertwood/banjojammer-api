@@ -28,6 +28,10 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<aws.account.id>351537458136</aws.account.id>
+		<aws.region>us-east-1</aws.region>
+		<docker.image.prefix>${aws.account.id}.dkr.ecr.${aws.region}.amazonaws.com</docker.image.prefix>
+    <docker.image.name>banjojammer</docker.image.name>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -100,6 +104,24 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+			<configuration>
+					<excludes>
+							<exclude>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+							</exclude>
+					</excludes>
+					<layers>
+							<enabled>true</enabled>
+					</layers>
+					<image>
+							<name>${docker.image.prefix}/${docker.image.name}:${project.version}</name>
+					</image>
+			</configuration>
 			</plugin>
 		</plugins>
 	</build>
