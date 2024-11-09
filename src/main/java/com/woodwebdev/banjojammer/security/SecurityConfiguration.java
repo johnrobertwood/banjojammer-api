@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity
 public class SecurityConfiguration {
   private final AuthenticationProvider authenticationProvider;
-  private static final String[] ALLOW_LIST = {"/api/auth/**"};
+  private static final String[] ALLOW_LIST = {"/api/auth/**", "/actuator/**"};
   private final JwtAuthenticationFilter jwtAuthFilter;
   
   @Bean
