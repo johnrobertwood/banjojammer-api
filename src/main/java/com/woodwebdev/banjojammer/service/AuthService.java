@@ -36,31 +36,36 @@ public class AuthService {
       .password(passwordEncoder.encode(request.getPassword()))
       .role(request.getRole())
       .build();
-    repository.save(user);
-    var jwtToken = jwtService.generateToken(user);
-    logger.info("User registered: " + user.getEmail());
-    return AuthenticationResponse.builder()
-      .token(jwtToken)
-      .build();
+    try {
+      repository.save(user);
+      var jwtToken = jwtService.generateToken(user);
+      logger.info("User registered: " + user.getEmail());
+      return AuthenticationResponse.builder()
+        .token(jwtToken)
+        .build();
+    } catch (Exception e) {
+      logger.error("Error registering user: " + user.getEmail());
+      throw e;
+    }
   }
 
-    public AuthenticationResponse login(AuthenticationRequest request) {
-        try {
-            authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()
-                )
-            );
-            
-            var user = repository.findByEmail(request.getEmail()).orElseThrow();
-            String jwt = jwtService.generateToken(user);
-            logger.info("User logged in: " + user.getEmail());
-            return AuthenticationResponse.builder()
-                .token(jwt)
-                .build();
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
-        }
-    }
+  public AuthenticationResponse login(AuthenticationRequest request) {
+      try {
+          authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(
+                  request.getEmail(),
+                  request.getPassword()
+              )
+          );
+          
+          var user = repository.findByEmail(request.getEmail()).orElseThrow();
+          String jwt = jwtService.generateToken(user);
+          logger.info("User logged in: " + user.getEmail());
+          return AuthenticationResponse.builder()
+              .token(jwt)
+              .build();
+      } catch (AuthenticationException e) {
+          throw new BadCredentialsException("Invalid username or password");
+      }
+  }
 }
