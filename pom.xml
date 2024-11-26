@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.woodwebdev</groupId>
 	<artifactId>banjojammer</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.3</version>
 	<name>banjojammer</name>
 	<description>Banjo Jammer Application</description>
 	<url/>
