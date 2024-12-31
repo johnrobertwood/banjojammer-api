@@ -1,12 +1,10 @@
-version: '3.8'
-
 networks:
   default:
 
 services:
   db:
     image: postgres:latest
-    platform: linux/arm64/v8  # For M1/M2 Macs
+    platform: linux/arm64/v8 # For M1/M2 Macs
     container_name: banjo-db
     ports:
       - 5432:5432
@@ -16,3 +14,18 @@ services:
       POSTGRES_USER: banjo_user
       POSTGRES_PASSWORD: banjo_password
       POSTGRES_DB: banjo_db
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: banjo-app
+    ports:
+      - 8080:8080
+    environment:
+      JWT_SECRET: 515955f324885776c07a8802b9b3a93ab4e895e5be73cc4cac1adbcd46b97d8f
+      DB_USERNAME: banjo_user
+      DB_PASSWORD: banjo_password
+      DB_URL: jdbc:postgresql://db:5432/banjo_db
+    depends_on:
+      - db
